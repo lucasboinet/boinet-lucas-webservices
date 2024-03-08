@@ -18,7 +18,6 @@ export const getAll = async (req, res) => {
 
     res.json(users);
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 };
@@ -145,7 +144,6 @@ export const loginUser = async (req, res) => {
 
     res.status(200).send({ access_token: accessToken });
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 };
