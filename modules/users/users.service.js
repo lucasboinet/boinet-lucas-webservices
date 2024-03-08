@@ -1,15 +1,35 @@
+import skillsSchema from '../skills/skills.schema.js';
+import { SORT_DIRECTION } from './users.constants.js';
 import UsersSchema from './users.schema.js'
 
-export function getAllUsers() {
-  return UsersSchema.find().populate('skills');
-}
+export async function getAllUsers({ direction, search, order, limit, fields }) {
+  const sortDirection = SORT_DIRECTION[direction] || 1;
 
-export function getOneByEmail(email) {
-  return UsersSchema.findOne({ email });
+  const skillsQuery = await skillsSchema.find({ label: { $in: fields.skills.map((value) => new RegExp(`${value}`, 'i')) } });
+  const skillsFilters = { skills: { $in: skillsQuery.map((skill) => skill._id) } };
+
+  const searchQuery = search 
+    ? { $or: [
+      { email: new RegExp(`${search}`, 'i') },
+      { firstname: new RegExp(`${search}`, 'i') },
+      { lastname: new RegExp(`${search}`, 'i') },
+    ] } 
+    : {}
+
+  return UsersSchema
+    .find({ ...skillsFilters, ...searchQuery })
+    .sort({ [order]: sortDirection })
+    .limit(limit)
+    .select('-password')
+    .populate('skills');
 }
 
 export function getUserById(userId) {
   return UsersSchema.findOne({ _id: userId }).populate('skills');
+}
+
+export function getOneByEmail(email) {
+  return UsersSchema.findOne({ email });
 }
 
 export function updateUserById({ userId, payload }) {

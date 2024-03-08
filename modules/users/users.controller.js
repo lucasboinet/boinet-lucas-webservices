@@ -4,12 +4,19 @@ import config from "../../config/index.js";
 import * as usersService from "./users.service.js";
 
 export const getAll = async (req, res) => {
+  const { order, limit, search, direction, skills } = req.query;
+
   try {
-    const users = await usersService.getAllUsers().select('-password');
+    const fields = {
+      skills: skills instanceof Array ? skills : [skills],
+    }
+
+    const users = await usersService.getAllUsers({ order, limit, search, direction, fields });
 
     res.json(users);
   } catch (err) {
-    res.send(err);
+    console.log(err);
+    res.status(500).send(err);
   }
 };
 
@@ -26,7 +33,7 @@ export const getUser = async (req, res) => {
 
     res.json(user);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
 
@@ -58,7 +65,6 @@ export const createUser = async (req, res) => {
 
     res.json(createdUser);
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 };
@@ -87,7 +93,7 @@ export const updateUser = async (req, res) => {
 
     res.json(updatedUser);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
 
@@ -106,7 +112,7 @@ export const deleteUser = async (req, res) => {
 
     res.sendStatus(204);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
 
@@ -134,7 +140,8 @@ export const loginUser = async (req, res) => {
 
     res.status(200).send({ access_token: accessToken });
   } catch (err) {
-    res.send(err);
+    console.log(err);
+    res.status(500).send(err);
   }
 };
 
