@@ -5,7 +5,7 @@ import * as usersService from "./users.service.js";
 
 export const getAll = async (req, res) => {
   try {
-    const users = await usersService.getAllUsers();
+    const users = await usersService.getAllUsers().select('-password');
 
     res.json(users);
   } catch (err) {
@@ -17,7 +17,7 @@ export const getUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await usersService.getUserById(userId);
+    const user = await usersService.getUserById(userId).select('-password');
 
     if (!user) {
       res.sendStatus(404);

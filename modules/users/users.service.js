@@ -17,7 +17,7 @@ export function updateUserById({ userId, payload }) {
     { _id: userId },
     { $set: { ...payload } },
     { new: true }
-  ).populate('skills');
+  ).select('-password').populate('skills');
 }
 
 export function deleteUserById(userId) {
@@ -26,6 +26,6 @@ export function deleteUserById(userId) {
 
 export async function createUser({ firstname, lastname, email, password, skills }) {
   const createdUser = await UsersSchema.create({ firstname, lastname, email, password, skills });
-  return getUserById(createdUser._id);
+  return getUserById(createdUser._id).select('-password');
 }
 
