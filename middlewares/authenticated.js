@@ -1,6 +1,6 @@
 import config from '../config/index.js';
 import jwt from 'jsonwebtoken';
-import UserModel from '../modules/users/users.schema.js';
+import { getUserById } from '../modules/users/users.service.js';
 
 const handler = (req, res, next) => {
   const bearer = req.headers.authorization;
@@ -20,7 +20,7 @@ const handler = (req, res, next) => {
       if (err) {
         return res.status(403).json({ message: err.message })
       }
-      const user = await UserModel.findOne({ _id: result.userId }).select('-password');
+      const user = await getUserById(result.userId).select('-password');
       req.user = user;
       return next();
     });
