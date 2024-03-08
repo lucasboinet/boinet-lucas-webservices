@@ -5,22 +5,7 @@ _Copy .env.example to a .env file_
 
 - `npm install`
 
-- `docker-compose up -d`
-
-# Technos
-- Express
-- Mangoose
-- MongoDB
-- Docker
-
-# Retour d'experience
-On a trouvé que docker-compose facilite le développement en local.
-
-Pour l'architecture, il faut y penser dès le début du projet. 
-
-On a trouvé qu'Express s'utilise plutot bien et qu'il est user-friendly.
-
-Pour l'allier avec MongoDB, on est parti sur mongoose en ODM, qui selon nous, s'utilise plutot bien. 
+- `npm run dev`
 
 # API Reference
 
@@ -34,7 +19,13 @@ Pour l'allier avec MongoDB, on est parti sur mongoose en ODM, qui selon nous, s'
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| No params |
+| `order` | `string` | Specify on wich field to sort the result
+| `direction` | `string` | ['asc', 'desc'] : Order of the results
+| `limit` | `number` | How many results to get
+| `search` | `string` | Anything you want to search on `firstname`, `lastname` and `email` field
+| `skills` | `string` | Specify a skill to filter the result. You can speficy as many skills as you want (see exemple below)
+
+Example: /users?skills=vue&skills=laravel
 
 #### Get user
 
@@ -55,8 +46,11 @@ Pour l'allier avec MongoDB, on est parti sur mongoose en ODM, qui selon nous, s'
 
 | Body | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `username`| `string` | **Required**. Username of the user to create |
+| `firstname`| `string` | **Required**. Firstname of the user to create |
+| `lastname`| `string` | **Required**. Lastname of the user to create |
 | `email`   | `string` | **Required**. Email of the user to create |
+| `password`   | `string` | **Required**. Password of the user to create |
+| `skills`   | `array` | Ids of the skills of the user to create |
 
 #### Update user
 
@@ -70,8 +64,10 @@ Pour l'allier avec MongoDB, on est parti sur mongoose en ODM, qui selon nous, s'
 
 | Body | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `username`  | `string` | **Required**. Username of the user to edit |
-| `email`  | `string` | **Required**. Email of the user to edit |
+| `firstname`  | `string` | Firstname of the user to edit |
+| `lastname`  | `string` | Lastname of the user to edit |
+| `email`  | `string` | Email of the user to edit |
+| `skills`  | `array` | skills ids of the user to edit |
 
 #### Delete user
 
@@ -83,128 +79,123 @@ Pour l'allier avec MongoDB, on est parti sur mongoose en ODM, qui selon nous, s'
 | :-------- | :------- | :-------------------------------- |
 | `userId`  | `string` | **Required**. Id of item to delete |
 
-## Games
+## Projects
 
-#### Get all games
+#### Get all projects
 
 ```http
-  GET /games
+  GET /projects
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `order` | `string` | Specify on wich field to sort the result
+| `direction` | `string` | ['asc', 'desc'] : Order of the results
+| `limit` | `number` | How many results to get
+| `search` | `string` | Anything you want to search on `name` and `description` field
+
+#### Get project
+
+```http
+  GET /projects/${projectId}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `projectId`  | `string` | **Required**. Id of item to fetch |
+
+
+#### Create project
+
+```http
+  POST /projects
+```
+
+| Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`| `string` | **Required**. Name of the project to create |
+| `description`| `string` | **Required**. Description of the project to create |
+| `members`   | `array` | Ids of the members of the project to create |
+
+#### Update project
+
+```http
+  PATCH /projects/${projectId}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `projectId`  | `string` | **Required**. Id of item to update |
+
+| Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`  | `string` | Name of the project to edit |
+| `description`  | `string` | Description of the project to edit |
+| `members`  | `string` | Users ids of the project to edit |
+
+#### Delete project
+
+```http
+  DELETE /projects/${projectId}
+```
+
+| Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `projectId`  | `string` | **Required**. Id of item to delete |
+
+## Skills
+
+#### Get all skills
+
+```http
+  GET /skills
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | No params |
 
-#### Get game
+#### Get skill
 
 ```http
-  GET /games/${gameId}
+  GET /skills/${skillId}
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `gameId`  | `string` | **Required**. Id of item to fetch |
+| `skillId`  | `string` | **Required**. Id of item to fetch |
 
 
-#### Create game
+#### Create skill
 
 ```http
-  POST /games
+  POST /skills
 ```
 
 | Body | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `name`| `string` | **Required**. Name of the game |
-| `description`   | `string` | **Required**. Description of the game |
-| `editor`   | `string` | **Required**. Editor name of the game |
-| `price`   | `number` | **Required**. Price of the game |
-| `thumbnail`   | `string` | **Required**. Url of the game thumbnail |
+| `label`| `string` | **Required**. Label of the skill to create |
 
-#### Update game
+#### Update skill
 
 ```http
-  PATCH /games/${gameId}
+  PATCH /skills/${skillId}
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `gameId`  | `string` | **Required**. Id of item to update |
+| `skillId`  | `string` | **Required**. Id of item to update |
 
 | Body | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `name`| `string` | **Required**. Name of the game |
-| `description`   | `string` | **Required**. Description of the game |
-| `editor`   | `string` | **Required**. Editor name of the game |
-| `price`   | `number` | **Required**. Price of the game |
-| `thumbnail`   | `string` | **Required**. Url of the game thumbnail |
+| `label`  | `string` | Label of the skill to edit |
 
-#### Delete game
+#### Delete project
 
 ```http
-  DELETE /games/${gameId}
+  DELETE /skills/${skillId}
 ```
 
 | Body | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `gameId`  | `string` | **Required**. Id of item to delete |
-
-
-## Purchases
-
-#### Get all purchases
-
-```http
-  GET /purchases
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| No params |
-
-#### Get purchase
-
-```http
-  GET /purchases/${purchaseId}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `purchaseId`  | `string` | **Required**. Id of item to fetch |
-
-
-#### Create purchase
-
-```http
-  POST /purchases
-```
-
-| Body | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `userId`| `string` | **Required**. Id of the buyer |
-| `gameId`   | `string` | **Required**. Id of the game  |
-| `paymentMethod`   | `string` | **Required**. Payment method used to buy the game|
-
-#### Update purchase
-
-```http
-  PATCH /purchases/${purchaseId}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `purchaseId`  | `string` | **Required**. Id of item to update |
-
-| Body | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `refundedAt`| `date` | **Required**. Date when the game has been refunded |
-
-#### Delete purchase
-
-```http
-  DELETE /purchases/${purchaseId}
-```
-
-| Body | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `purchaseId`  | `string` | **Required**. Id of item to delete |
-
+| `skillId`  | `string` | **Required**. Id of item to delete |
