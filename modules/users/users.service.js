@@ -5,7 +5,7 @@ import UsersSchema from './users.schema.js'
 export async function getAllUsers({ direction, search, order, limit, fields }) {
   const sortDirection = SORT_DIRECTION[direction] || 1;
 
-  const skillsFilters = getSkillsFilters(fields.skills);
+  const skillsFilters = await getSkillsFilters(fields.skills);
 
   const searchQuery = search 
     ? { $or: [
