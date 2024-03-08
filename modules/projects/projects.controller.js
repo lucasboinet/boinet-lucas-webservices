@@ -1,10 +1,14 @@
 import * as projectsService from './projects.service.js'
+import cache from '../../services/redis.js';
+import config from '../../config/index.js';
 
 export const getAll = async (req, res) => {
   const { order, limit, direction, search } = req.query;
 
   try {
     const projects = await projectsService.getAllProjects({ order, limit, search, direction });
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(projects));
 
     res.json(projects);
   } catch (err) {
@@ -22,6 +26,8 @@ export const getProject = async (req, res) => {
       res.sendStatus(404);
       return;
     }
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(project));
 
     res.json(project);
   } catch (err) {

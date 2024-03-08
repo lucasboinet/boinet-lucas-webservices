@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './services/db.js';
 import router from './routes/index.js';
+import { connectRedis } from './services/redis.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 
 connectDB();
+connectRedis();
 
 app.use('/', router);
 

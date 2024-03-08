@@ -1,8 +1,12 @@
 import * as skillsService from './skills.service.js'
+import cache from '../../services/redis.js';
+import config from '../../config/index.js';
 
 export const getAll = async (req, res) => {
   try {
     const skills = await skillsService.getAllSkills();
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(skills));
 
     res.json(skills);
   } catch (err) {
@@ -20,6 +24,8 @@ export const getSkill = async (req, res) => {
       res.sendStatus(404);
       return;
     }
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(skill));
 
     res.json(skill);
   } catch (err) {

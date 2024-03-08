@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../config/index.js";
 import * as usersService from "./users.service.js";
+import cache from '../../services/redis.js';
 
 export const getAll = async (req, res) => {
   const { order, limit, search, direction, skills } = req.query;
@@ -12,6 +13,8 @@ export const getAll = async (req, res) => {
     }
 
     const users = await usersService.getAllUsers({ order, limit, search, direction, fields });
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(users));
 
     res.json(users);
   } catch (err) {
@@ -30,6 +33,8 @@ export const getUser = async (req, res) => {
       res.sendStatus(404);
       return;
     }
+
+    cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(user));
 
     res.json(user);
   } catch (err) {
@@ -147,6 +152,8 @@ export const loginUser = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   const user = req.user;
+
+  cache.setEx(req.originalUrl, config.redisTtl, JSON.stringify(user));
 
   res.json(user);
 };
