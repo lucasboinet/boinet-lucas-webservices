@@ -1,12 +1,11 @@
-import skillsSchema from '../skills/skills.schema.js';
 import { SORT_DIRECTION } from './users.constants.js';
+import { getSkillsFilters } from './users.functions.js';
 import UsersSchema from './users.schema.js'
 
 export async function getAllUsers({ direction, search, order, limit, fields }) {
   const sortDirection = SORT_DIRECTION[direction] || 1;
 
-  const skillsQuery = await skillsSchema.find({ label: { $in: fields.skills.map((value) => new RegExp(`${value}`, 'i')) } });
-  const skillsFilters = { skills: { $in: skillsQuery.map((skill) => skill._id) } };
+  const skillsFilters = getSkillsFilters(fields.skills);
 
   const searchQuery = search 
     ? { $or: [
