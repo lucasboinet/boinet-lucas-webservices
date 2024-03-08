@@ -1,7 +1,20 @@
+import { SORT_DIRECTION } from './projects.constant.js';
 import ProjectsSchema from './projects.schema.js'
 
-export function getAllProjects() {
-  return ProjectsSchema.find();
+export function getAllProjects({ order, limit, search, direction }) {
+  const sortDirection = SORT_DIRECTION[direction] || 1;
+
+  const searchQuery = search 
+    ? { $or: [
+      { name: new RegExp(`${search}`, 'i') },
+      { description: new RegExp(`${search}`, 'i') },
+    ] } 
+    : {}
+
+  return ProjectsSchema
+    .find({ ...searchQuery })
+    .sort({ [order]: sortDirection })
+    .limit(limit);
 }
 
 export function getProjectById(projectId) {

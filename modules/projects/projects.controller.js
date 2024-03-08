@@ -1,8 +1,10 @@
 import * as projectsService from './projects.service.js'
 
 export const getAll = async (req, res) => {
+  const { order, limit, direction, search } = req.query;
+
   try {
-    const projects = await projectsService.getAllProjects();
+    const projects = await projectsService.getAllProjects({ order, limit, search, direction });
 
     res.json(projects);
   } catch (err) {

@@ -5,7 +5,7 @@ export function getAllSkills() {
 }
 
 export function getOneByLabel(label) {
-  return SkillsSchema.findOne({ label: new RegExp(`^${label}$`, 'i') });
+  return SkillsSchema.findOne({ label: new RegExp(`${label}`, 'i') });
 }
 
 export function getSkillById(skillId) {
