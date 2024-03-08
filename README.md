@@ -5,6 +5,8 @@ _Copy .env.example to a .env file_
 
 - `npm install`
 
+- `docker-compose up -d` // to start redis
+
 - `npm run dev`
 
 # API Reference
